@@ -47,7 +47,7 @@ const TableJokerTile& TableJokerTile::asTableJokerTile() const
 	return *this;
 }
 
-bool TableJokerTile::isCompatibleForStair(const Tile& other) const
+bool TableJokerTile::canBeFollowedInStairBy(const Tile& other) const
 {
 	if (!isLocked())
 	{

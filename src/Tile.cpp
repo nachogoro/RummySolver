@@ -10,6 +10,11 @@ Tile::Tile(TileType type, uint16_t id, uint16_t n_of_tiles)
 Tile::~Tile()
 {}
 
+uint16_t Tile::id() const
+{
+	return mId;
+}
+
 TileType Tile::type() const
 {
 	return mType;
@@ -23,6 +28,15 @@ void Tile::addCompatibleTileForStair(uint16_t id)
 void Tile::addCompatibleTileForTrio(uint16_t id)
 {
 	mCompatibleForTrio[id] = 1;
+}
+const boost::dynamic_bitset<>& Tile::getCompatibleTilesForTrio() const
+{
+	return mCompatibleForTrio;
+}
+
+const boost::dynamic_bitset<>& Tile::getCompatibleTilesForStair() const
+{
+	return mCompatibleForStair;
 }
 
 DeckRegularTile& Tile::asDeckRegularTile()

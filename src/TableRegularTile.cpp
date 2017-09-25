@@ -30,7 +30,7 @@ const TableRegularTile& TableRegularTile::asTableRegularTile() const
 	return *this;
 }
 
-bool TableRegularTile::isCompatibleForStair(const Tile& other) const
+bool TableRegularTile::canBeFollowedInStairBy(const Tile& other) const
 {
 	switch (other.type())
 	{

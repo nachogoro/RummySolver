@@ -27,6 +27,11 @@ class Tile
 		virtual ~Tile();
 
 		/**
+		 * Returns the ID of the tile.
+		 */
+		uint16_t id() const;
+
+		/**
 		 * Returns the type of the tile.
 		 */
 		TileType type() const;
@@ -34,7 +39,7 @@ class Tile
 		/**
 		 * Whether another tile could follow this one in a stair.
 		 */
-		virtual bool isCompatibleForStair(const Tile& o) const = 0;
+		virtual bool canBeFollowedInStairBy(const Tile& o) const = 0;
 
 		/**
 		 * Mark the given tile as compatible to form a stair.
@@ -50,6 +55,16 @@ class Tile
 		 * Mark the given tile as compatible to form a trio.
 		 */
 		void addCompatibleTileForTrio(uint16_t id);
+
+		/**
+		 * Returns the set of tiles which are compatible for a trio.
+		 */
+		const boost::dynamic_bitset<>& getCompatibleTilesForTrio() const;
+
+		/**
+		 * Returns the set of tiles which are compatible for a stair.
+		 */
+		const boost::dynamic_bitset<>& getCompatibleTilesForStair() const;
 
 		/**
 		 * Returns a reference to the current object as a regular tile from the

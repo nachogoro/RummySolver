@@ -30,7 +30,7 @@ const DeckRegularTile& DeckRegularTile::asDeckRegularTile() const
 	return *this;
 }
 
-bool DeckRegularTile::isCompatibleForStair(const Tile& other) const
+bool DeckRegularTile::canBeFollowedInStairBy(const Tile& other) const
 {
 	switch (other.type())
 	{

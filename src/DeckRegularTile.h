@@ -39,7 +39,7 @@ class DeckRegularTile : public Tile
 		/**
 		 * Whether the specified tile could follow this one in a stair.
 		 */
-		virtual bool isCompatibleForStair(const Tile& o) const;
+		virtual bool canBeFollowedInStairBy(const Tile& o) const;
 
 		/**
 		 * Whether the specified tile could follow this one in a trio.
