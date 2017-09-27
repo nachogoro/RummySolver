@@ -10,6 +10,8 @@
  */
 class PotentialGroup
 {
+	friend class Group;
+
 	public:
 		PotentialGroup(
 				const Tile& tile,
@@ -22,12 +24,18 @@ class PotentialGroup
 		/**
 		 * Add a new tile to this group.
 		 */
-		virtual void addTile(const Tile& tile) = 0;
+		virtual void addTile(const Tile& tile);
 
 		/**
 		 * Whether the current group is valid (i.e. has more than 3 tiles).
 		 */
 		virtual bool isValid() const;
+
+		/**
+		 * The score of this group (i.e. the sum of the values of tiles which
+		 * come from the player's deck)
+		 */
+		virtual uint16_t score() const;
 
 		/**
 		 * Returns the ID of the next compatible tile which could be added to
@@ -38,9 +46,12 @@ class PotentialGroup
 		virtual boost::optional<uint16_t> nextCompatibleId();
 
 	protected:
-		std::vector<std::reference_wrapper<const Tile>> mTiles;
+		// ID of the tiles which could be added to this group
 		boost::dynamic_bitset<> mCompatibleTiles;
 	private:
+		// ID of the tiles inside this group
+		boost::dynamic_bitset<> mTilesId;
+		uint16_t mScore;
 		boost::optional<boost::dynamic_bitset<>::size_type> mLastReturnedId;
 };
 

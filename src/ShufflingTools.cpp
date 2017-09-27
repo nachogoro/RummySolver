@@ -29,6 +29,41 @@ namespace
 			nextId = group.nextCompatibleId();
 		}
 	}
+
+	boost::optional<GroupConfiguration> findBestConfigurationRecursively(
+			const GroupConfiguration& candidate,
+			const boost::optional<GroupConfiguration>& currentBest,
+			const std::vector<Group>& allGroups)
+	{
+		boost::optional<GroupConfiguration> result = currentBest;
+
+		if (candidate.isValid()
+				&& (!result || result->score() < candidate.score()))
+		{
+			result = candidate;
+		}
+
+		const auto& compatibleGroups = candidate.compatibleGroups();
+		boost::dynamic_bitset<>::size_type nextGroup
+			= compatibleGroups.find_first();
+		while (nextGroup != boost::dynamic_bitset<>::npos)
+		{
+			GroupConfiguration copy(candidate);
+			copy.addGroup(allGroups[nextGroup]);
+			const auto newCandidate = ::findBestConfigurationRecursively(
+					copy, result, allGroups);
+
+			if (newCandidate && newCandidate->isValid()
+					&& (!result || result->score() < newCandidate->score()))
+			{
+				result = newCandidate;
+			}
+
+			nextGroup = compatibleGroups.find_next(nextGroup);
+		}
+
+		return result;
+	}
 }
 
 void ShufflingTools::markCompatibleTiles(
@@ -73,5 +108,46 @@ std::vector<Group> ShufflingTools::getAllPossibleGroups(
 		::generateAll(stair, allGroups, allTiles);
 	}
 
+	// Sort the groups by score in descending order
+	std::sort(
+			allGroups.begin(),
+			allGroups.end(),
+			[](const Group& a, const Group& b) -> bool
+			{
+				return a.score() > b.score();
+			});
+
+	// Assign an ID to each group
+	uint16_t id = 0;
+	for (auto& group : allGroups)
+	{
+		group.setId(id++, allGroups.size());
+	}
+
+	// Make each group aware of other compatible groups
+	for (size_t i = 0; i < allGroups.size() - 1; ++i)
+	{
+		for (size_t j = i + 1; j < allGroups.size(); ++j)
+		{
+			allGroups[i].markGroupIfCompatible(allGroups[j]);
+		}
+	}
+
 	return allGroups;
 }
+
+boost::optional<GroupConfiguration> ShufflingTools::getBestConfiguration(
+		const std::vector<Group>& allGroups,
+		boost::optional<std::chrono::duration<int>> /*limitInSecond*/)
+{
+	boost::optional<GroupConfiguration> bestConfig;
+
+	for (size_t i = 0; i < allGroups.size(); ++i)
+	{
+		GroupConfiguration candidate(allGroups[i]);
+		bestConfig = ::findBestConfigurationRecursively(
+				candidate, bestConfig, allGroups);
+	}
+	return bestConfig;
+}
+

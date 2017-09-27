@@ -20,23 +20,18 @@ TileType Tile::type() const
 	return mType;
 }
 
+// TODO: mutability is bad. Make the compatibility checkings a set of
+// independent functions and pass this information in the constructor.
 void Tile::addCompatibleTileForStair(uint16_t id)
 {
-	mCompatibleForStair[id] = 1;
+	mCompatibleForStair.set(id);
 }
 
+// TODO: mutability is bad. Make the compatibility checkings a set of
+// independent functions and pass this information in the constructor.
 void Tile::addCompatibleTileForTrio(uint16_t id)
 {
-	mCompatibleForTrio[id] = 1;
-}
-const boost::dynamic_bitset<>& Tile::getCompatibleTilesForTrio() const
-{
-	return mCompatibleForTrio;
-}
-
-const boost::dynamic_bitset<>& Tile::getCompatibleTilesForStair() const
-{
-	return mCompatibleForStair;
+	mCompatibleForTrio.set(id);
 }
 
 DeckRegularTile& Tile::asDeckRegularTile()

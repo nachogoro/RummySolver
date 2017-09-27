@@ -22,6 +22,9 @@ enum TileType
  */
 class Tile
 {
+	friend class PotentialStair;
+	friend class PotentialTrio;
+
 	public:
 		Tile(TileType type, uint16_t id, uint16_t n_of_tiles);
 		virtual ~Tile();
@@ -55,16 +58,6 @@ class Tile
 		 * Mark the given tile as compatible to form a trio.
 		 */
 		void addCompatibleTileForTrio(uint16_t id);
-
-		/**
-		 * Returns the set of tiles which are compatible for a trio.
-		 */
-		const boost::dynamic_bitset<>& getCompatibleTilesForTrio() const;
-
-		/**
-		 * Returns the set of tiles which are compatible for a stair.
-		 */
-		const boost::dynamic_bitset<>& getCompatibleTilesForStair() const;
 
 		/**
 		 * Returns a reference to the current object as a regular tile from the
