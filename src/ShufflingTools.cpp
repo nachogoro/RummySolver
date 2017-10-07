@@ -121,7 +121,7 @@ std::vector<Group> ShufflingTools::getAllPossibleGroups(
 	uint16_t id = 0;
 	for (auto& group : allGroups)
 	{
-		group.setId(id++, allGroups.size());
+		group.setId(id++);
 	}
 
 	// Make each group aware of other compatible groups

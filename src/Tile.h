@@ -26,7 +26,7 @@ class Tile
 	friend class PotentialTrio;
 
 	public:
-		Tile(TileType type, uint16_t id, uint16_t n_of_tiles);
+		Tile(TileType type, uint16_t id);
 		virtual ~Tile();
 
 		/**

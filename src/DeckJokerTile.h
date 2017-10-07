@@ -9,7 +9,7 @@
 class DeckJokerTile : public Tile
 {
 	public:
-		DeckJokerTile(uint16_t id, uint16_t n_of_tiles);
+		DeckJokerTile(uint16_t id);
 
 		/**
 		 * Whether the specified tile could follow this one in a stair.

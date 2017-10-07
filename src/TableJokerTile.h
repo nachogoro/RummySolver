@@ -3,6 +3,7 @@
 
 #include "Tile.h"
 #include <boost/optional.hpp>
+#include <set>
 
 /**
  * Class representing a joker tile on the table.
@@ -10,19 +11,40 @@
  */
 class TableJokerTile : public Tile
 {
+	// TODO: add new state: conditionally unlocked (it's only unlocked
+	// by a deck tile)
 	public:
 		/**
 		 * Returns an unlocked joker.
 		 */
-		static TableJokerTile unlocked(uint16_t id, uint16_t n_of_tiles);
+		static std::unique_ptr<TableJokerTile> unlocked(uint16_t id);
+
+		/**
+		 * Returns a conditionally locked joker: it is only unlocked if a
+		 * certain tile from the player's deck is played.
+		 */
+		static std::unique_ptr<TableJokerTile> conditionallyLockedInTrio(
+				uint8_t number,
+				uint8_t colorMask,
+				uint16_t id,
+				const std::set<uint16_t>& unlockingTilesIds);
+
+		/**
+		 * Returns a conditionally locked joker: it is only unlocked if a
+		 * certain tile from the player's deck is played.
+		 */
+		static std::unique_ptr<TableJokerTile> conditionallyLockedInStair(
+				uint8_t number,
+				uint8_t colorMask,
+				uint16_t id,
+				const std::set<uint16_t>& unlockingTilesIds);
 
 		/**
 		 * Returns a locked joker which must remain as a particular tile and be
 		 * used in a stair.
 		 */
-		static TableJokerTile lockedInStair(
-				uint8_t number, uint8_t color,
-				uint16_t id, uint16_t n_of_tiles);
+		static std::unique_ptr<TableJokerTile> lockedInStair(
+				uint8_t number, uint8_t color, uint16_t id);
 
 		/**
 		 * Returns a locked joker which must remain as a particular tile and be
@@ -30,9 +52,8 @@ class TableJokerTile : public Tile
 		 * Locked jokers in trios are locked into a single number but can
 		 * potentially be locked into more than one color.
 		 */
-		static TableJokerTile lockedInTrio(
-				uint8_t number, uint8_t color_mask,
-				uint16_t id, uint16_t n_of_tiles);
+		static std::unique_ptr<TableJokerTile> lockedInTrio(
+				uint8_t number, uint8_t colorMask, uint16_t id);
 
 		/**
 		 * Returns a reference to the current object as a regular tile from the
@@ -62,6 +83,11 @@ class TableJokerTile : public Tile
 		bool isLocked() const;
 
 		/**
+		 * Whether the joker is conditionally locked.
+		 */
+		bool isConditionallyLocked() const;
+
+		/**
 		 * Whether the joker must remain as a particular tile in a stair.
 		 */
 		bool isLockedInStair() const;
@@ -83,6 +109,12 @@ class TableJokerTile : public Tile
 		 */
 		uint8_t lockedColors() const;
 
+		/**
+		 * If the joker is conditionally locked, it returns the set of tiles
+		 * that should have been played to unlock it.
+		 */
+		const std::set<uint16_t>& unlockingTilesIds() const;
+
 	private:
 		enum LockMode
 		{
@@ -90,10 +122,11 @@ class TableJokerTile : public Tile
 			TRIO
 		};
 
-		TableJokerTile(uint16_t id, uint16_t n_of_tiles);
+		TableJokerTile(uint16_t id);
 		TableJokerTile(
-				LockMode lock, uint8_t number, uint8_t color_mask,
-				uint16_t id, uint16_t n_of_tiles);
+				LockMode lock, uint8_t number,
+				uint8_t color_mask, uint16_t id,
+				const std::set<uint16_t>& unlockingTilesIds);
 
 	private:
 		struct LockParams
@@ -104,6 +137,7 @@ class TableJokerTile : public Tile
 		};
 
 		boost::optional<LockParams> mLockParams;
+		std::set<uint16_t> mUnlockingTilesIds;
 };
 
 #endif /* TABLE_JOKER_TILE_H */

@@ -1,8 +1,8 @@
 #include "DeckJokerTile.h"
 #include "TableJokerTile.h"
 
-DeckJokerTile::DeckJokerTile(uint16_t id, uint16_t n_of_tiles)
-	: Tile::Tile(DECK_JOKER, id, n_of_tiles)
+DeckJokerTile::DeckJokerTile(uint16_t id)
+	: Tile::Tile(DECK_JOKER, id)
 {  }
 
 bool DeckJokerTile::canBeFollowedInStairBy(const Tile& o) const

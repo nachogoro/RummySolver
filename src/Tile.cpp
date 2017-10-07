@@ -1,10 +1,11 @@
 #include "Tile.h"
+#include "GameInfo.h"
 
-Tile::Tile(TileType type, uint16_t id, uint16_t n_of_tiles)
+Tile::Tile(TileType type, uint16_t id)
 	: mId(id),
 	  mType(type),
-	  mCompatibleForTrio(n_of_tiles),
-	  mCompatibleForStair(n_of_tiles)
+	  mCompatibleForTrio(GameInfo::numberOfTiles()),
+	  mCompatibleForStair(GameInfo::numberOfTiles())
 {}
 
 Tile::~Tile()

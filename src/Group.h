@@ -14,10 +14,13 @@ class Group
 		Group(const PotentialGroup& g);
 
 		/**
-		 * Set the ID of this group as part of the larger set of n_of_groups
-		 * groups.
+		 * Set the ID of this group.
 		 */
-		void setId(uint16_t id, uint16_t n_of_groups);
+		void setId(uint16_t id);
+
+		/**
+		 * Returns the ID of this group.
+		 */
 		uint16_t id() const;
 
 		/**

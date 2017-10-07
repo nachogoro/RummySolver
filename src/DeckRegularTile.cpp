@@ -3,9 +3,8 @@
 #include "TableJokerTile.h"
 
 DeckRegularTile::DeckRegularTile(
-		uint8_t number, TileColor color,
-		uint16_t id, uint16_t n_of_tiles)
-	: Tile::Tile(DECK_REGULAR, id, n_of_tiles),
+		uint8_t number, TileColor::Color color, uint16_t id)
+	: Tile::Tile(DECK_REGULAR, id),
 	  mNumber(number),
 	  mColor(color)
 {  }
@@ -15,7 +14,7 @@ uint8_t DeckRegularTile::number() const
 	return mNumber;
 }
 
-TileColor DeckRegularTile::color() const
+TileColor::Color DeckRegularTile::color() const
 {
 	return mColor;
 }

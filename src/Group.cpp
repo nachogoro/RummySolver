@@ -1,4 +1,5 @@
 #include "Group.h"
+#include "GameInfo.h"
 
 Group::Group(const PotentialGroup& g)
 	: mTilesInGroup(g.mTilesId),
@@ -9,10 +10,10 @@ Group::Group(const PotentialGroup& g)
 // TODO: Mutability is bad. This leaves the window open for mId to be
 // uninitialised when id() is called for the first time. Ideally we should use
 // dependency injection in the constructor.
-void Group::setId(uint16_t id, uint16_t n_of_groups)
+void Group::setId(uint16_t id)
 {
 	mId = id;
-	mCompatibleGroups = boost::dynamic_bitset<>(n_of_groups);
+	mCompatibleGroups = boost::dynamic_bitset<>(GameInfo::numberOfGroups());
 }
 
 uint16_t Group::id() const

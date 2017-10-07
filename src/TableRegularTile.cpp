@@ -3,9 +3,8 @@
 #include "DeckRegularTile.h"
 
 TableRegularTile::TableRegularTile(
-		uint8_t number, TileColor color,
-		uint16_t id, uint16_t n_of_tiles)
-	: Tile::Tile(TABLE_REGULAR, id, n_of_tiles),
+		uint8_t number, TileColor::Color color, uint16_t id)
+	: Tile::Tile(TABLE_REGULAR, id),
 	  mNumber(number),
 	  mColor(color)
 {  }
@@ -15,7 +14,7 @@ uint8_t TableRegularTile::number() const
 	return mNumber;
 }
 
-TileColor TableRegularTile::color() const
+TileColor::Color TableRegularTile::color() const
 {
 	return mColor;
 }
