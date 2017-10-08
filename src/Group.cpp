@@ -2,7 +2,8 @@
 #include "GameInfo.h"
 
 Group::Group(const PotentialGroup& g)
-	: mTilesInGroup(g.mTilesId),
+	: mTileIdsInGroup(g.mTilesId),
+	  mTilesInGroup(g.mTiles),
 	  mId(0),
 	  mScore(g.score())
 {  }
@@ -26,7 +27,7 @@ uint16_t Group::id() const
 // Ideally we should use dependency injection in the constructor.
 void Group::markGroupIfCompatible(const Group& o)
 {
-	if ((mTilesInGroup & o.mTilesInGroup).none())
+	if ((mTileIdsInGroup & o.mTileIdsInGroup).none())
 	{
 		mCompatibleGroups.set(o.id());
 	}
@@ -35,6 +36,16 @@ void Group::markGroupIfCompatible(const Group& o)
 const boost::dynamic_bitset<>& Group::compatibleGroups() const
 {
 	return mCompatibleGroups;
+}
+
+const boost::dynamic_bitset<>& Group::tileIdsInGroup() const
+{
+	return mTileIdsInGroup;
+}
+
+const std::vector<std::reference_wrapper<const Tile>>& Group::tilesInGroup() const
+{
+	return mTilesInGroup;
 }
 
 uint16_t Group::score() const

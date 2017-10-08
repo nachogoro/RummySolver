@@ -37,13 +37,25 @@ class Group
 		const boost::dynamic_bitset<>& compatibleGroups() const;
 
 		/**
+		 * Returns a bitset in which the n-th bit represents the Tile with ID
+		 * n. If the bit is set, it means the tile is in use in this group.
+		 */
+		const boost::dynamic_bitset<>& tileIdsInGroup() const;
+
+		/**
+		 * Returns all the tiles in the group in order.
+		 */
+		const std::vector<std::reference_wrapper<const Tile>>& tilesInGroup() const;
+
+		/**
 		 * The score of this group (i.e. the sum of the values of tiles which
 		 * come from the player's deck)
 		 */
 		uint16_t score() const;
 
 	private:
-		boost::dynamic_bitset<> mTilesInGroup;
+		boost::dynamic_bitset<> mTileIdsInGroup;
+		std::vector<std::reference_wrapper<const Tile>> mTilesInGroup;
 		uint16_t mId;
 		boost::dynamic_bitset<> mCompatibleGroups;
 		uint16_t mScore;

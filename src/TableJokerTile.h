@@ -11,9 +11,27 @@
  */
 class TableJokerTile : public Tile
 {
-	// TODO: add new state: conditionally unlocked (it's only unlocked
-	// by a deck tile)
 	public:
+		/**
+		 * The group of a locked joker (whether it is locked in a stair or in a
+		 * trio)
+		 */
+		enum LockMode
+		{
+			STAIR,
+			TRIO
+		};
+
+		/**
+		 * Parameters of a locked joker.
+		 */
+		struct LockParams
+		{
+			LockMode lockMode;
+			uint8_t number;
+			uint8_t color_mask;
+		};
+
 		/**
 		 * Returns an unlocked joker.
 		 */
@@ -116,12 +134,6 @@ class TableJokerTile : public Tile
 		const std::set<uint16_t>& unlockingTilesIds() const;
 
 	private:
-		enum LockMode
-		{
-			STAIR,
-			TRIO
-		};
-
 		TableJokerTile(uint16_t id);
 		TableJokerTile(
 				LockMode lock, uint8_t number,
@@ -129,13 +141,6 @@ class TableJokerTile : public Tile
 				const std::set<uint16_t>& unlockingTilesIds);
 
 	private:
-		struct LockParams
-		{
-			LockMode lockMode;
-			uint8_t number;
-			uint8_t color_mask;
-		};
-
 		boost::optional<LockParams> mLockParams;
 		std::set<uint16_t> mUnlockingTilesIds;
 };

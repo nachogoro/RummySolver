@@ -25,6 +25,7 @@ PotentialGroup::PotentialGroup(
 PotentialGroup::PotentialGroup(const PotentialGroup& o)
 	: mCompatibleTiles(o.mCompatibleTiles),
 	  mTilesId(o.mTilesId),
+	  mTiles(o.mTiles),
 	  mScore(o.mScore),
 	  mLastReturnedId(boost::none)
 { }
@@ -32,10 +33,10 @@ PotentialGroup::PotentialGroup(const PotentialGroup& o)
 PotentialGroup::~PotentialGroup()
 {  }
 
-
 void PotentialGroup::addTile(const Tile& tile)
 {
 	mTilesId.set(tile.id());
+	mTiles.push_back(std::cref(tile));
 
 	if (tile.type() == DECK_REGULAR)
 	{

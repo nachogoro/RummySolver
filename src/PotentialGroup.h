@@ -51,6 +51,7 @@ class PotentialGroup
 	private:
 		// ID of the tiles inside this group
 		boost::dynamic_bitset<> mTilesId;
+		std::vector<std::reference_wrapper<const Tile>> mTiles;
 		uint16_t mScore;
 		boost::optional<boost::dynamic_bitset<>::size_type> mLastReturnedId;
 };

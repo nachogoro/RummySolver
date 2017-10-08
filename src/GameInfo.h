@@ -1,6 +1,7 @@
 #ifndef GAME_INFO_H
 #define GAME_INFO_H
 
+#include "Group.h"
 #include <boost/dynamic_bitset.hpp>
 #include <cstdint>
 
@@ -19,12 +20,16 @@ class GameInfo
 	public:
 		static uint16_t numberOfTiles();
 		static const boost::dynamic_bitset<>& tableTilesMask();
+		static const std::vector<std::reference_wrapper<const TableJokerTile>>& conditionallyLockedJokers();
 		static uint16_t numberOfGroups();
+		static const std::vector<std::reference_wrapper<const Group>>& allGroups();
 	private:
 		static void setTableTilesMask(uint16_t numberOfTableTiles);
+	private:
 		static uint16_t mNumberOfTiles;
 		static boost::dynamic_bitset<> mTableTilesMask;
-		static uint16_t mNumberOfGroups;
+		static std::vector<std::reference_wrapper<const TableJokerTile>> mConditionallyLockedJokers;
+		static std::vector<std::reference_wrapper<const Group>> mAllGroups;
 };
 
 #endif /* GAME_INFO_H */

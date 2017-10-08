@@ -14,7 +14,8 @@ class GroupConfiguration
 
 		/**
 		 * Whether the configuration is valid (i.e. all the tiles which were
-		 * originally at the table are in use).
+		 * originally at the table are in use, and the table jokers have been
+		 * used in a valid manner).
 		 */
 		bool isValid() const;
 
@@ -35,6 +36,7 @@ class GroupConfiguration
 		 * Adds a new group to this configuration.
 		 */
 		void addGroup(const Group& group);
+
 	private:
 		// Groups in use in this configuration
 		boost::dynamic_bitset<> mGroups;
