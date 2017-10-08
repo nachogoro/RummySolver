@@ -15,6 +15,14 @@
 
 namespace
 {
+	uint16_t countWordsInFile(
+			const boost::filesystem::path& file)
+	{
+		std::ifstream infile(file.string());
+		std::istream_iterator<std::string> in{ infile }, end;
+		return static_cast<uint16_t>(std::distance(in, end));
+	}
+
 	std::vector<std::reference_wrapper<const Tile>> getTableJokers(
 			const std::vector<std::unique_ptr<Tile>>& tableTiles)
 	{
@@ -53,7 +61,7 @@ namespace
 			const boost::filesystem::path& playersDeckFile)
 	{
 		std::ifstream input(playersDeckFile.string());
-		if (input.bad())
+		if (input.fail())
 		{
 			std::cerr << "Cannot open " << playersDeckFile << "\n";
 			return boost::none;
@@ -112,7 +120,7 @@ namespace
 			const std::vector<std::unique_ptr<Tile>>& deckTiles)
 	{
 		std::ifstream input(tableFile.string());
-		if (input.bad())
+		if (input.fail())
 		{
 			std::cerr << "Cannot open " << tableFile << "\n";
 			return boost::none;
@@ -146,9 +154,6 @@ namespace
 			// Nothing else to do
 			return tableTiles;
 		}
-
-		std::vector<std::reference_wrapper<Tile>> allTiles
-			= ::mergeTiles(deckTiles, tableTiles);
 
 		// If there are any tiles on the table that unlock a joker, that joker
 		// is not considered unlocked
@@ -246,8 +251,7 @@ GameParser::Result::tableTiles() const
 	return mTableTiles;
 }
 
-const std::vector<std::reference_wrapper<Tile>>&
-GameParser::Result::allTiles() const
+std::vector<std::reference_wrapper<Tile>>& GameParser::Result::allTiles()
 {
 	return mAllTiles;
 }
@@ -256,6 +260,14 @@ boost::optional<GameParser::Result> GameParser::parseGame(
 		const boost::filesystem::path& playersDeckFile,
 		const boost::filesystem::path& tableFile)
 {
+	// Before creating any tile we need to set the number of tiles in the game.
+	const uint16_t numberOfDeckTiles = ::countWordsInFile(playersDeckFile);
+	const uint16_t numberOfTableTiles = ::countWordsInFile(tableFile);
+
+	// Update GameInfo
+	GameInfo::mNumberOfTiles = numberOfDeckTiles + numberOfTableTiles;
+	GameInfo::setTableTilesMask(numberOfTableTiles);
+
 	auto playersDeck = ::parsePlayersDeck(playersDeckFile);
 	if (!playersDeck)
 	{
@@ -267,10 +279,6 @@ boost::optional<GameParser::Result> GameParser::parseGame(
 	{
 		return boost::none;
 	}
-
-	// Update GameInfo
-	GameInfo::mNumberOfTiles = ::mergeTiles(*playersDeck, *table).size();
-	GameInfo::setTableTilesMask(table->size());
 
 	for (const auto& tile : *table)
 	{

@@ -20,7 +20,7 @@ class GameInfo
 			const boost::filesystem::path& playersDeckFile,
 			const boost::filesystem::path& tableFile);
 	friend std::vector<Group> ShufflingTools::getAllPossibleGroups(
-		std::vector<std::unique_ptr<Tile>>& allTiles);
+		const std::vector<std::reference_wrapper<Tile>>& allTiles);
 
 	public:
 		static uint16_t numberOfTiles();

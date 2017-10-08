@@ -13,7 +13,7 @@ namespace ShufflingTools
 	/**
 	 * Marks all the compatible tiles for each tile.
 	 */
-	void markCompatibleTiles(std::vector<std::unique_ptr<Tile>>& tiles);
+	void markCompatibleTiles(std::vector<std::reference_wrapper<Tile>>& tiles);
 
 
 	/**
@@ -22,7 +22,7 @@ namespace ShufflingTools
 	 * criteria.
 	 */
 	std::vector<Group> getAllPossibleGroups(
-			std::vector<std::unique_ptr<Tile>>& tiles);
+			const std::vector<std::reference_wrapper<Tile>>& tiles);
 
 	/**
 	 * Returns the best configuration of the given groups (i.e. what groups

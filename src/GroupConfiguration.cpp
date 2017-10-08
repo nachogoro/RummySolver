@@ -319,7 +319,7 @@ namespace
 }
 
 GroupConfiguration::GroupConfiguration(const Group& group)
-	: mGroups(group.mCompatibleGroups.size()),
+	: mGroups(GameInfo::numberOfGroups()),
 	  mTiles(group.mTileIdsInGroup),
 	  mCompatibleGroups(group.compatibleGroups()),
 	  mScore(group.score())

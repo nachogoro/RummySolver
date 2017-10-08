@@ -253,7 +253,7 @@ ParsingUtils::TemporaryTile::TemporaryTile(
 
 bool ParsingUtils::TemporaryTile::isJoker() const
 {
-	return !!mRegularInfo;
+	return !mRegularInfo;
 }
 
 uint8_t ParsingUtils::TemporaryTile::number() const
@@ -350,7 +350,6 @@ ParsingUtils::temporaryTilesToTiles(
 
 			for (auto& tmp : *tmpGroup)
 			{
-
 				tiles.push_back(std::move(tmp));
 			}
 		}

@@ -16,7 +16,7 @@ namespace GameParser
 
 			const std::vector<std::unique_ptr<Tile>>& playerTiles() const;
 			const std::vector<std::unique_ptr<Tile>>& tableTiles() const;
-			const std::vector<std::reference_wrapper<Tile>>& allTiles() const;
+			std::vector<std::reference_wrapper<Tile>>& allTiles();
 
 		private:
 			std::vector<std::unique_ptr<Tile>> mPlayerTiles;

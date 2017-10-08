@@ -20,7 +20,6 @@ namespace ParsingUtils
 		uint8_t number() const;
 		TileColor::Color color() const;
 
-
 		private:
 		TemporaryTile(
 				const boost::optional<

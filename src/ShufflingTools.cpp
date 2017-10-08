@@ -14,7 +14,7 @@ namespace
 	void generateAll(
 			GroupType group,
 			std::vector<Group>& allGroups,
-			const std::vector<std::unique_ptr<Tile>>& allTiles)
+			const std::vector<std::reference_wrapper<Tile>>& allTiles)
 	{
 		if (group.isValid())
 		{
@@ -25,7 +25,7 @@ namespace
 
 		while (nextId)
 		{
-			group.addTile(*allTiles[*nextId]);
+			group.addTile(allTiles[*nextId]);
 			::generateAll(group, allGroups, allTiles);
 			nextId = group.nextCompatibleId();
 		}
@@ -68,7 +68,7 @@ namespace
 }
 
 void ShufflingTools::markCompatibleTiles(
-		std::vector<std::unique_ptr<Tile>>& tiles)
+		std::vector<std::reference_wrapper<Tile>>& tiles)
 {
 	for (size_t i = 0; i < tiles.size(); ++i)
 	{
@@ -79,8 +79,8 @@ void ShufflingTools::markCompatibleTiles(
 				continue;
 			}
 
-			Tile& tile = *tiles[i];
-			const Tile& targetTile = *tiles[j];
+			Tile& tile = tiles[i];
+			const Tile& targetTile = tiles[j];
 
 			if (tile.canBeFollowedInStairBy(targetTile))
 			{
@@ -96,16 +96,16 @@ void ShufflingTools::markCompatibleTiles(
 }
 
 std::vector<Group> ShufflingTools::getAllPossibleGroups(
-		std::vector<std::unique_ptr<Tile>>& allTiles)
+		const std::vector<std::reference_wrapper<Tile>>& allTiles)
 {
 	std::vector<Group> allGroups;
 
 	for (size_t i = 0; i < allTiles.size(); ++i)
 	{
-		PotentialTrio trio(std::cref(*allTiles[i]));
+		PotentialTrio trio(std::cref(allTiles[i]));
 		::generateAll(trio, allGroups, allTiles);
 
-		PotentialStair stair(std::cref(*allTiles[i]));
+		PotentialStair stair(std::cref(allTiles[i]));
 		::generateAll(stair, allGroups, allTiles);
 	}
 
@@ -117,6 +117,12 @@ std::vector<Group> ShufflingTools::getAllPossibleGroups(
 			{
 				return a.score() > b.score();
 			});
+
+	// Update GameInfo BEFORE setting the IDs
+	for (const auto& group : allGroups)
+	{
+		GameInfo::mAllGroups.push_back(std::cref(group));
+	}
 
 	// Assign an ID to each group
 	uint16_t id = 0;
@@ -132,12 +138,6 @@ std::vector<Group> ShufflingTools::getAllPossibleGroups(
 		{
 			allGroups[i].markGroupIfCompatible(allGroups[j]);
 		}
-	}
-
-	// Update GameInfo
-	for (const auto& group : allGroups)
-	{
-		GameInfo::mAllGroups.push_back(std::cref(group));
 	}
 
 	return allGroups;
