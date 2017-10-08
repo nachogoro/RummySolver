@@ -1,4 +1,5 @@
 #include "ShufflingTools.h"
+#include "GameInfo.h"
 #include "PotentialTrio.h"
 #include "PotentialStair.h"
 
@@ -131,6 +132,12 @@ std::vector<Group> ShufflingTools::getAllPossibleGroups(
 		{
 			allGroups[i].markGroupIfCompatible(allGroups[j]);
 		}
+	}
+
+	// Update GameInfo
+	for (const auto& group : allGroups)
+	{
+		GameInfo::mAllGroups.push_back(std::cref(group));
 	}
 
 	return allGroups;

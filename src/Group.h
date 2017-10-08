@@ -3,6 +3,8 @@
 
 #include "PotentialGroup.h"
 
+using GroupType = PotentialGroup::GroupType;
+
 /**
  * A class representing a set of tiles which form a valid individual
  * configuration.
@@ -53,7 +55,13 @@ class Group
 		 */
 		uint16_t score() const;
 
+		/**
+		 * Returns the type of the group.
+		 */
+		GroupType type() const;
+
 	private:
+		GroupType mType;
 		boost::dynamic_bitset<> mTileIdsInGroup;
 		std::vector<std::reference_wrapper<const Tile>> mTilesInGroup;
 		uint16_t mId;

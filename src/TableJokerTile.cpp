@@ -7,7 +7,7 @@ TableJokerTile::TableJokerTile(uint16_t id)
 {  }
 
 TableJokerTile::TableJokerTile(
-		LockMode lock, uint8_t number, uint8_t color_mask, uint16_t id,
+		GroupType lock, uint8_t number, uint8_t color_mask, uint16_t id,
 		const std::set<uint16_t>& unlockingTilesIds)
 	: Tile(TABLE_JOKER, id),
 	  mLockParams(LockParams
@@ -31,7 +31,12 @@ std::unique_ptr<TableJokerTile> TableJokerTile::conditionallyLockedInTrio(
 		const std::set<uint16_t>& unlockingTilesIds)
 {
 	return std::unique_ptr<TableJokerTile>(
-			new TableJokerTile(TRIO, number, colorMask, id, unlockingTilesIds));
+			new TableJokerTile(
+				PotentialGroup::TRIO,
+				number,
+				colorMask,
+				id,
+				unlockingTilesIds));
 }
 
 std::unique_ptr<TableJokerTile> TableJokerTile::conditionallyLockedInStair(
@@ -41,7 +46,12 @@ std::unique_ptr<TableJokerTile> TableJokerTile::conditionallyLockedInStair(
 		const std::set<uint16_t>& unlockingTilesIds)
 {
 	return std::unique_ptr<TableJokerTile>(
-			new TableJokerTile(STAIR, number, color, id, unlockingTilesIds));
+			new TableJokerTile(
+				PotentialGroup::STAIR,
+				number,
+				color,
+				id,
+				unlockingTilesIds));
 }
 
 std::unique_ptr<TableJokerTile> TableJokerTile::lockedInStair(
@@ -49,7 +59,11 @@ std::unique_ptr<TableJokerTile> TableJokerTile::lockedInStair(
 {
 	return std::unique_ptr<TableJokerTile>(
 			new TableJokerTile(
-				STAIR, number, color, id, std::set<uint16_t>()));
+				PotentialGroup::STAIR,
+				number,
+				color,
+				id,
+				std::set<uint16_t>()));
 }
 
 std::unique_ptr<TableJokerTile> TableJokerTile::lockedInTrio(
@@ -57,7 +71,11 @@ std::unique_ptr<TableJokerTile> TableJokerTile::lockedInTrio(
 {
 	return std::unique_ptr<TableJokerTile>(
 			new TableJokerTile(
-				TRIO, number, color_mask, id, std::set<uint16_t>()));
+				PotentialGroup::TRIO,
+				number,
+				color_mask,
+				id,
+				std::set<uint16_t>()));
 }
 
 TableJokerTile& TableJokerTile::asTableJokerTile()
@@ -184,12 +202,12 @@ bool TableJokerTile::isConditionallyLocked() const
 
 bool TableJokerTile::isLockedInStair() const
 {
-	return !!mLockParams && mLockParams->lockMode == STAIR;
+	return !!mLockParams && mLockParams->groupType == PotentialGroup::STAIR;
 }
 
 bool TableJokerTile::isLockedInTrio() const
 {
-	return mLockParams && mLockParams->lockMode == TRIO;
+	return mLockParams && mLockParams->groupType == PotentialGroup::TRIO;
 }
 
 uint8_t TableJokerTile::lockedNumber() const

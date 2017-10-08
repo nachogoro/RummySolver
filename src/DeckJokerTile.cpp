@@ -7,7 +7,9 @@ DeckJokerTile::DeckJokerTile(uint16_t id)
 
 bool DeckJokerTile::canBeFollowedInStairBy(const Tile& o) const
 {
-	if (o.type() != TABLE_JOKER || !o.asTableJokerTile().isLockedInTrio())
+	if (o.type() != TABLE_JOKER
+			|| o.asTableJokerTile().isConditionallyLocked()
+			|| !o.asTableJokerTile().isLockedInTrio())
 	{
 		return true;
 	}
@@ -17,7 +19,9 @@ bool DeckJokerTile::canBeFollowedInStairBy(const Tile& o) const
 
 bool DeckJokerTile::isCompatibleForTrio(const Tile& o) const
 {
-	if (o.type() != TABLE_JOKER || !o.asTableJokerTile().isLockedInStair())
+	if (o.type() != TABLE_JOKER
+			|| o.asTableJokerTile().isConditionallyLocked()
+			|| !o.asTableJokerTile().isLockedInStair())
 	{
 		return true;
 	}

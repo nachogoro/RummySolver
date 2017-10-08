@@ -1,6 +1,7 @@
 #ifndef PARSING_UTILS_H
 #define PARSING_UTILS_H
 
+#include "PotentialGroup.h"
 #include "Tile.h"
 #include "TileColor.h"
 #include <boost/optional.hpp>
@@ -9,12 +10,6 @@
 
 namespace ParsingUtils
 {
-	enum GroupType
-	{
-		TRIO,
-		STAIR
-	};
-
 	class TemporaryTile
 	{
 		public:

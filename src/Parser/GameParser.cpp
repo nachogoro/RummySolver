@@ -1,4 +1,5 @@
 #include "GameParser.h"
+#include "GameInfo.h"
 #include "DeckJokerTile.h"
 #include "DeckRegularTile.h"
 #include "TableJokerTile.h"
@@ -265,6 +266,20 @@ boost::optional<GameParser::Result> GameParser::parseGame(
 	if (!table)
 	{
 		return boost::none;
+	}
+
+	// Update GameInfo
+	GameInfo::mNumberOfTiles = ::mergeTiles(*playersDeck, *table).size();
+	GameInfo::setTableTilesMask(table->size());
+
+	for (const auto& tile : *table)
+	{
+		if (tile->type() == TABLE_JOKER
+				&& tile->asTableJokerTile().isConditionallyLocked())
+		{
+			GameInfo::mConditionallyLockedJokers.push_back(
+					std::cref(tile->asTableJokerTile()));
+		}
 	}
 
 	return GameParser::Result(std::move(*playersDeck), std::move(*table));

@@ -1,14 +1,55 @@
 #include "GroupConfiguration.h"
+#include "DeckJokerTile.h"
+#include "DeckRegularTile.h"
 #include "GameInfo.h"
 #include "TableJokerTile.h"
+#include "TableRegularTile.h"
 #include <map>
 #include <set>
 
-using LockMode = TableJokerTile::LockMode;
+using GroupType = PotentialGroup::GroupType;
 using LockParams = TableJokerTile::LockParams;
 
 namespace
 {
+	TileColor::Color getStairColor(
+			const std::vector<std::reference_wrapper<const Tile>>& tiles)
+	{
+		for (const auto& tile : tiles)
+		{
+			switch (tile.get().type())
+			{
+				case TABLE_REGULAR:
+					return tile.get().asTableRegularTile().color();
+				case DECK_REGULAR:
+					return tile.get().asDeckRegularTile().color();
+				default:
+					break;
+			}
+		}
+		throw std::runtime_error("Could not find stair color!");
+	}
+
+	uint8_t getFirstNumberOfStair(
+			const std::vector<std::reference_wrapper<const Tile>>& tiles)
+	{
+		for (size_t i = 0; i < tiles.size(); ++i)
+		{
+			const auto& tile = tiles[i].get();
+			switch (tile.type())
+			{
+				case TABLE_REGULAR:
+					return tile.asTableRegularTile().number() - i;
+				case DECK_REGULAR:
+					return tile.asDeckRegularTile().number() - i;
+				default:
+					break;
+			}
+		}
+
+		throw std::runtime_error("Could not find start number of stair!");
+	}
+
 	unsigned int numberOfConditionallyLockedJokersUnlocked(
 			const boost::dynamic_bitset<>& tiles)
 	{
@@ -79,10 +120,74 @@ namespace
 				? 2 : 1;
 	}
 
-	std::vector<LockParams> getRoleOfJokersInGroup(const Group& /*group*/)
+	std::vector<LockParams> getRoleOfJokersInGroup(const Group& group)
 	{
-		// TODO Implement
-		return std::vector<LockParams>();
+		std::vector<LockParams> result;
+		switch (group.type())
+		{
+			case PotentialGroup::TRIO:
+			{
+				uint8_t mask = 0;
+				uint8_t number;
+				for (const auto& tile : group.tilesInGroup())
+				{
+					switch (tile.get().type())
+					{
+						case DECK_REGULAR:
+						{
+							const auto& tileRef = tile.get().asDeckRegularTile();
+							mask |= tileRef.color();
+							number = tileRef.number();
+							break;
+						}
+						case TABLE_REGULAR:
+						{
+							const auto& tileRef = tile.get().asDeckRegularTile();
+							mask |= tileRef.color();
+							number = tileRef.number();
+							break;
+						}
+						default:
+						break;
+					}
+				}
+
+				for (const auto& tile : group.tilesInGroup())
+				{
+					if (tile.get().type() == TABLE_JOKER)
+					{
+						result.push_back(
+								LockParams { group.type(), number, mask });
+					}
+				}
+
+				break;
+			}
+			case PotentialGroup::STAIR:
+			{
+				const TileColor::Color stairColor
+					= ::getStairColor(group.tilesInGroup());
+
+				const uint8_t number = ::getFirstNumberOfStair(
+						group.tilesInGroup());
+
+				for (const auto& tile : group.tilesInGroup())
+				{
+					if (tile.get().type() == TABLE_JOKER)
+					{
+						result.push_back(
+								LockParams {
+									group.type(),
+									number,
+									static_cast<uint8_t>(stairColor) });
+					}
+				}
+
+				break;
+			}
+		}
+
+		return result;
 	}
 
 	bool groupContainsAnyOf(const Group& group, const std::set<uint16_t>& ids)
@@ -101,11 +206,11 @@ namespace
 			const LockParams& tableRole,
 			const TableJokerTile& joker)
 	{
-		const LockMode mode = joker.isLockedInTrio()
-			? TableJokerTile::TRIO
-			: TableJokerTile::STAIR;
+		const GroupType type = joker.isLockedInTrio()
+			? PotentialGroup::TRIO
+			: PotentialGroup::STAIR;
 
-		return mode == tableRole.lockMode
+		return type == tableRole.groupType
 			&& joker.lockedNumber() == tableRole.number
 			&& (joker.lockedColors() & tableRole.color_mask) != 0;
 	}
@@ -257,7 +362,7 @@ bool GroupConfiguration::isValid() const
 
 	return (conditionallyLockedJokersUnlocked
 			+ conditionallyLockedJokersInPosition)
-				== conditionallyLockedJokers;
+				>= conditionallyLockedJokers;
 }
 
 uint16_t GroupConfiguration::score() const

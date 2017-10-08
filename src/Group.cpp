@@ -2,7 +2,8 @@
 #include "GameInfo.h"
 
 Group::Group(const PotentialGroup& g)
-	: mTileIdsInGroup(g.mTilesId),
+	: mType(g.mType),
+	  mTileIdsInGroup(g.mTilesId),
 	  mTilesInGroup(g.mTiles),
 	  mId(0),
 	  mScore(g.score())
@@ -51,4 +52,9 @@ const std::vector<std::reference_wrapper<const Tile>>& Group::tilesInGroup() con
 uint16_t Group::score() const
 {
 	return mScore;
+}
+
+GroupType Group::type() const
+{
+	return mType;
 }

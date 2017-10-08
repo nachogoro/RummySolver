@@ -11,7 +11,7 @@
 
 namespace
 {
-	ParsingUtils::GroupType askUserForType(
+	PotentialGroup::GroupType askUserForType(
 			const std::vector<ParsingUtils::TemporaryTile>& tiles)
 	{
 		std::ostringstream repr;
@@ -40,11 +40,11 @@ namespace
 		{
 			if (option == 'T' || option == 't')
 			{
-				return ParsingUtils::TRIO;
+				return PotentialGroup::TRIO;
 			}
 			else if (option == 'S' || option == 's')
 			{
-				return ParsingUtils::STAIR;
+				return PotentialGroup::STAIR;
 			}
 			else
 			{
@@ -54,7 +54,7 @@ namespace
 		}
 	}
 
-	boost::optional<ParsingUtils::GroupType> deduceGroupType(
+	boost::optional<PotentialGroup::GroupType> deduceGroupType(
 			const std::vector<ParsingUtils::TemporaryTile>& tiles)
 	{
 		uint8_t nonJokerTiles = 0;
@@ -86,13 +86,13 @@ namespace
 
 			if (colors.size() == 1 && numbers.size() == nonJokerTiles)
 			{
-				return ParsingUtils::STAIR;
+				return PotentialGroup::STAIR;
 			}
 			else if (numbers.size() == 1
 					&& colors.size() == nonJokerTiles
 					&& tiles.size() <= 4)
 			{
-				return ParsingUtils::TRIO;
+				return PotentialGroup::TRIO;
 			}
 			else
 			{
@@ -117,7 +117,7 @@ namespace
 	 * Returns the number of the first element of a stair.
 	 * This is necessary because it might be a joker.
 	 */
-	uint8_t getStartNumber(
+	uint8_t getFirstNumberOfStair(
 			const std::vector<ParsingUtils::TemporaryTile>& tiles)
 	{
 		for (size_t i = 0; i < tiles.size(); ++i)
@@ -168,7 +168,7 @@ namespace
 
 		switch (*type)
 		{
-			case ParsingUtils::TRIO:
+			case PotentialGroup::TRIO:
 			{
 				uint8_t mask = 0;
 				uint8_t number;
@@ -197,11 +197,11 @@ namespace
 				}
 				break;
 			}
-			case ParsingUtils::STAIR:
+			case PotentialGroup::STAIR:
 			{
 				const TileColor::Color color = ::getStairColor(tiles);
 
-				uint8_t number = ::getStartNumber(tiles);
+				uint8_t number = ::getFirstNumberOfStair(tiles);
 
 				for (size_t i = 0; i < tiles.size(); ++i)
 				{

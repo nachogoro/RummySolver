@@ -2,6 +2,8 @@
 #define GAME_INFO_H
 
 #include "Group.h"
+#include "Parser/GameParser.h"
+#include "ShufflingTools.h"
 #include <boost/dynamic_bitset.hpp>
 #include <cstdint>
 
@@ -14,8 +16,11 @@
  */
 class GameInfo
 {
-	friend class ShufflingTools;
-	friend class RummyParser;
+	friend boost::optional<GameParser::Result> GameParser::parseGame(
+			const boost::filesystem::path& playersDeckFile,
+			const boost::filesystem::path& tableFile);
+	friend std::vector<Group> ShufflingTools::getAllPossibleGroups(
+		std::vector<std::unique_ptr<Tile>>& allTiles);
 
 	public:
 		static uint16_t numberOfTiles();

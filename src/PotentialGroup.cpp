@@ -3,8 +3,10 @@
 
 PotentialGroup::PotentialGroup(
 		const Tile& tile,
-		const boost::dynamic_bitset<>& compatibleTiles)
+		const boost::dynamic_bitset<>& compatibleTiles,
+		GroupType type)
 	: mCompatibleTiles(compatibleTiles),
+	  mType(type),
 	  mTilesId(compatibleTiles.size()),
 	  mScore(0)
 {

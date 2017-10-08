@@ -2,8 +2,11 @@
 #define TABLE_JOKER_TILE_H
 
 #include "Tile.h"
+#include "PotentialGroup.h"
 #include <boost/optional.hpp>
 #include <set>
+
+using GroupType = PotentialGroup::GroupType;
 
 /**
  * Class representing a joker tile on the table.
@@ -13,21 +16,11 @@ class TableJokerTile : public Tile
 {
 	public:
 		/**
-		 * The group of a locked joker (whether it is locked in a stair or in a
-		 * trio)
-		 */
-		enum LockMode
-		{
-			STAIR,
-			TRIO
-		};
-
-		/**
 		 * Parameters of a locked joker.
 		 */
 		struct LockParams
 		{
-			LockMode lockMode;
+			GroupType groupType;
 			uint8_t number;
 			uint8_t color_mask;
 		};
@@ -136,7 +129,7 @@ class TableJokerTile : public Tile
 	private:
 		TableJokerTile(uint16_t id);
 		TableJokerTile(
-				LockMode lock, uint8_t number,
+				GroupType groupType, uint8_t number,
 				uint8_t color_mask, uint16_t id,
 				const std::set<uint16_t>& unlockingTilesIds);
 
