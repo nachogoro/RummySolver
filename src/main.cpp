@@ -58,16 +58,29 @@ int main(int argc, char** argv)
 	const std::vector<Group> allGroups
 		= ShufflingTools::getAllPossibleGroups(parsingResult->allTiles());
 
+	std::cout << "Found " << allGroups.size() << " groups!\n";
+
+#if 0
 	for (const auto& group : allGroups)
 	{
 		std::cout << group.toString() << "\n";
 		std::cout << group.tileIdsInGroup() << "\n";
 	}
+#endif
 
+	// Record start time
+	const auto start = std::chrono::high_resolution_clock::now();
+
+	// TODO deal with SIGINT so that the program can be stopped at any point
 	const boost::optional<GroupConfiguration> bestConfig
 		= ShufflingTools::getBestConfiguration(
 				allGroups,
 				std::chrono::duration<int>(timeLimit));
+
+	const auto finish = std::chrono::high_resolution_clock::now();
+	std::cout << "Elapsed time: "
+		<< std::chrono::duration_cast<std::chrono::seconds>(finish - start).count()
+		<< "s\n";
 
 	if (bestConfig)
 	{
@@ -79,5 +92,4 @@ int main(int argc, char** argv)
 	{
 		std::cout << "No valid configuration found! :(\n";
 	}
-
 }

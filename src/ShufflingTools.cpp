@@ -3,7 +3,6 @@
 #include "PotentialTrio.h"
 #include "PotentialStair.h"
 
-// TODO remove
 #include <iostream>
 
 namespace
@@ -22,7 +21,6 @@ namespace
 		if (group.isValid())
 		{
 			allGroups.push_back(group);
-			std::cout << "Found group: " << Group(group).toString() << "\n";
 		}
 
 		const auto& compatibleTiles = group.compatibleTiles();
@@ -45,8 +43,8 @@ namespace
 	{
 		boost::optional<GroupConfiguration> result = currentBest;
 
-		if (candidate.isValid()
-				&& (!result || result->score() < candidate.score()))
+		if ((!result || result->score() < candidate.score())
+				&& candidate.isValid())
 		{
 			result = candidate;
 		}
@@ -56,15 +54,25 @@ namespace
 			= compatibleGroups.find_first();
 		while (nextGroup != boost::dynamic_bitset<>::npos)
 		{
+			// If the current configuration is now only checking against groups
+			// of score zero and its score is already below the current best
+			// one, no need to keep checking
+			if (allGroups[nextGroup].score() == 0 && result && candidate.score() <= result->score())
+			{
+				break;
+			}
+
 			GroupConfiguration copy(candidate);
 			copy.addGroup(allGroups[nextGroup]);
 			const auto newCandidate = ::findBestConfigurationRecursively(
 					copy, result, allGroups);
 
-			if (newCandidate && newCandidate->isValid()
-					&& (!result || result->score() < newCandidate->score()))
+			if (newCandidate
+					&& (!result || result->score() < newCandidate->score())
+					&& newCandidate->isValid())
 			{
 				result = newCandidate;
+				std::cout << "Found temporary candidate with score: " << newCandidate->score() << std::endl;
 			}
 
 			nextGroup = compatibleGroups.find_next(nextGroup);
@@ -158,7 +166,17 @@ boost::optional<GroupConfiguration> ShufflingTools::getBestConfiguration(
 
 	for (size_t i = 0; i < allGroups.size(); ++i)
 	{
+		// TODO Replace with progress bar
+		std::cout << "Seed group: " << i << "\n";
 		GroupConfiguration candidate(allGroups[i]);
+
+		if (candidate.score() == 0)
+		{
+			// Groups are sorted by score. If the first group has a score of
+			// zero, nothing with positive score will come off it.
+			 break;
+		}
+
 		bestConfig = ::findBestConfigurationRecursively(
 				candidate, bestConfig, allGroups);
 	}
