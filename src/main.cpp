@@ -60,14 +60,6 @@ int main(int argc, char** argv)
 
 	std::cout << "Found " << allGroups.size() << " groups!\n";
 
-#if 0
-	for (const auto& group : allGroups)
-	{
-		std::cout << group.toString() << "\n";
-		std::cout << group.tileIdsInGroup() << "\n";
-	}
-#endif
-
 	// Record start time
 	const auto start = std::chrono::high_resolution_clock::now();
 

@@ -2,6 +2,7 @@
 #include "GameInfo.h"
 #include "PotentialTrio.h"
 #include "PotentialStair.h"
+#include <boost/progress.hpp>
 
 #include <iostream>
 
@@ -72,7 +73,7 @@ namespace
 					&& newCandidate->isValid())
 			{
 				result = newCandidate;
-				std::cout << "Found temporary candidate with score: " << newCandidate->score() << std::endl;
+				//std::cout << "Found temporary candidate with score: " << newCandidate->score() << std::endl;
 			}
 
 			nextGroup = compatibleGroups.find_next(nextGroup);
@@ -164,21 +165,37 @@ boost::optional<GroupConfiguration> ShufflingTools::getBestConfiguration(
 {
 	boost::optional<GroupConfiguration> bestConfig;
 
-	for (size_t i = 0; i < allGroups.size(); ++i)
+	// Groups are sorted by score. If the first group has a score of
+	// zero, nothing with positive score will come off it, so need to try them
+	const size_t lastIndex = std::distance(
+			allGroups.begin(),
+			std::find_if(
+				allGroups.begin(),
+				allGroups.end(),
+				[](const Group& g) { return g.score() == 0; }));
+
+	boost::progress_display show_progress(lastIndex);
+	for (size_t i = 0; i < lastIndex; ++i)
 	{
-		// TODO Replace with progress bar
-		std::cout << "Seed group: " << i << "\n";
 		GroupConfiguration candidate(allGroups[i]);
 
-		if (candidate.score() == 0)
-		{
-			// Groups are sorted by score. If the first group has a score of
-			// zero, nothing with positive score will come off it.
-			 break;
-		}
-
-		bestConfig = ::findBestConfigurationRecursively(
+		auto updatedBestConfig = ::findBestConfigurationRecursively(
 				candidate, bestConfig, allGroups);
+
+		// TODO make this work with boost::progress_display
+#if 0
+		if ((!bestConfig && updatedBestConfig)
+				|| (updatedBestConfig && bestConfig
+					&& updatedBestConfig->score() > bestConfig->score()))
+		{
+			std::cout << "Found new configuration with score: "
+				<< updatedBestConfig->score() << "\n";
+		}
+#endif
+
+		bestConfig = updatedBestConfig;
+
+		++show_progress;
 	}
 	return bestConfig;
 }
