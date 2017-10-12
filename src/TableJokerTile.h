@@ -91,7 +91,7 @@ class TableJokerTile : public Tile
 		/**
 		 * Whether the joker is locked into a particular tile in general.
 		 */
-		bool isLocked() const;
+		bool isInconditionallyLocked() const;
 
 		/**
 		 * Whether the joker is conditionally locked.
@@ -125,6 +125,11 @@ class TableJokerTile : public Tile
 		 * that should have been played to unlock it.
 		 */
 		const std::set<uint16_t>& unlockingTilesIds() const;
+
+		/**
+		 * Returns a string representation of the tile.
+		 */
+		virtual std::string toString() const;
 
 	private:
 		TableJokerTile(uint16_t id);

@@ -37,6 +37,10 @@ class GroupConfiguration
 		 */
 		void addGroup(const Group& group);
 
+		friend std::ostream& operator<<(
+				std::ostream& stream,
+				const GroupConfiguration& g);
+
 	private:
 		// Groups in use in this configuration
 		boost::dynamic_bitset<> mGroups;

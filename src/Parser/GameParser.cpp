@@ -30,7 +30,7 @@ namespace
 		for (const auto& tile : tableTiles)
 		{
 			if (tile->type() == TABLE_JOKER
-					&& tile->asTableJokerTile().isLocked())
+					&& tile->asTableJokerTile().isInconditionallyLocked())
 			{
 				result.push_back(std::cref(*tile));
 			}
@@ -172,8 +172,12 @@ namespace
 						&& tile.number() == joker.lockedNumber())
 				{
 					// Unlock tile
-					(*tableTiles[joker.id()])
-						= std::move(*TableJokerTile::unlocked(joker.id()));
+					auto jokerIt = std::find_if(
+							tableTiles.begin(),
+							tableTiles.end(),
+							[&](const std::unique_ptr<Tile>& t)
+							{ return t->id() == joker.id(); });
+					(*jokerIt) = TableJokerTile::unlocked(joker.id());
 				}
 			}
 		}
@@ -222,7 +226,12 @@ namespace
 							joker.id(),
 							unlockingIds);
 
-				(*tableTiles[joker.id()]) = std::move(*lockedValue);
+				auto jokerIt = std::find_if(
+						tableTiles.begin(),
+						tableTiles.end(),
+						[&](const std::unique_ptr<Tile>& t)
+						{ return t->id() == joker.id(); });
+				(*jokerIt) = std::move(lockedValue);
 			}
 		}
 
@@ -289,6 +298,8 @@ boost::optional<GameParser::Result> GameParser::parseGame(
 					std::cref(tile->asTableJokerTile()));
 		}
 	}
+
+	GameInfo::mAllTiles = ::mergeTiles(*playersDeck, *table);
 
 	return GameParser::Result(std::move(*playersDeck), std::move(*table));
 }

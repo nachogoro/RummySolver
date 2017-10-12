@@ -20,6 +20,11 @@ class DeckJokerTile : public Tile
 		 * Whether the specified tile could follow this one in a trio.
 		 */
 		virtual bool isCompatibleForTrio(const Tile& o) const;
+
+		/**
+		 * Returns a string representation of the tile.
+		 */
+		virtual std::string toString() const;
 };
 
 #endif /* DECK_JOKER_TILE_H */

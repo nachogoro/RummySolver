@@ -1,6 +1,7 @@
 #include "GameInfo.h"
 
 uint16_t GameInfo::mNumberOfTiles;
+std::vector<std::reference_wrapper<Tile>> GameInfo::mAllTiles;
 boost::dynamic_bitset<> GameInfo::mTableTilesMask;
 std::vector<std::reference_wrapper<const TableJokerTile>> GameInfo::mConditionallyLockedJokers;
 std::vector<std::reference_wrapper<const Group>> GameInfo::mAllGroups;
@@ -20,6 +21,11 @@ void GameInfo::setTableTilesMask(uint16_t numberOfTableTiles)
 uint16_t GameInfo::numberOfTiles()
 {
 	return mNumberOfTiles;
+}
+
+const std::vector<std::reference_wrapper<Tile>>& GameInfo::allTiles()
+{
+	return mAllTiles;
 }
 
 const boost::dynamic_bitset<>& GameInfo::tableTilesMask()

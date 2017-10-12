@@ -60,6 +60,11 @@ class Group
 		 */
 		GroupType type() const;
 
+		/**
+		 * Returns a string representation of the group.
+		 */
+		std::string toString() const;
+
 	private:
 		GroupType mType;
 		boost::dynamic_bitset<> mTileIdsInGroup;

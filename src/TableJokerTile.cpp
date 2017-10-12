@@ -90,7 +90,7 @@ const TableJokerTile& TableJokerTile::asTableJokerTile() const
 
 bool TableJokerTile::canBeFollowedInStairBy(const Tile& other) const
 {
-	if (!isLocked())
+	if (!isInconditionallyLocked())
 	{
 		return true;
 	}
@@ -121,7 +121,7 @@ bool TableJokerTile::canBeFollowedInStairBy(const Tile& other) const
 		case TABLE_JOKER:
 		{
 			const auto& o = other.asTableJokerTile();
-			if (!o.isLocked())
+			if (!o.isInconditionallyLocked())
 			{
 				return true;
 			}
@@ -141,7 +141,7 @@ bool TableJokerTile::canBeFollowedInStairBy(const Tile& other) const
 
 bool TableJokerTile::isCompatibleForTrio(const Tile& other) const
 {
-	if (!isLocked())
+	if (!isInconditionallyLocked())
 	{
 		return true;
 	}
@@ -172,7 +172,7 @@ bool TableJokerTile::isCompatibleForTrio(const Tile& other) const
 		case TABLE_JOKER:
 		{
 			const auto& o = other.asTableJokerTile();
-			if (!o.isLocked())
+			if (!o.isInconditionallyLocked())
 			{
 				return true;
 			}
@@ -190,7 +190,7 @@ bool TableJokerTile::isCompatibleForTrio(const Tile& other) const
 	throw std::runtime_error("Tile is of no known type!");
 }
 
-bool TableJokerTile::isLocked() const
+bool TableJokerTile::isInconditionallyLocked() const
 {
 	return !!mLockParams && mUnlockingTilesIds.size() == 0;
 }
@@ -223,4 +223,9 @@ uint8_t TableJokerTile::lockedColors() const
 const std::set<uint16_t>& TableJokerTile::unlockingTilesIds() const
 {
 	return mUnlockingTilesIds;
+}
+
+std::string TableJokerTile::toString() const
+{
+	return "J";
 }

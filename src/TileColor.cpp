@@ -1,6 +1,6 @@
 #include "TileColor.h"
 
-const uint8_t TileColor::colorMask = static_cast<uint8_t>(0x1111);
+const uint8_t TileColor::colorMask = static_cast<uint8_t>(0x000F);
 
 const std::map<char, TileColor::Color> TileColor::letterToColor = {
 	{'K', TileColor::BLACK},

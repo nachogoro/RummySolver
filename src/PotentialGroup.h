@@ -45,24 +45,22 @@ class PotentialGroup
 	virtual uint16_t score() const;
 
 	/**
-	 * Returns the ID of the next compatible tile which could be added to this
-	 * tile or an empty optional if no more tiles are compatible.
-	 * Consecutive calls to this method should yield different results until an
-	 * empty optional is consistently returned.
+	 * Returns a bitset in which the n-th bit represents the Tile with ID
+	 * n. If the bit is set, it means it is compatible with all the ones
+	 * contained in this group.
 	 */
-	virtual boost::optional<uint16_t> nextCompatibleId();
+	const boost::dynamic_bitset<>& compatibleTiles() const;
 
 	protected:
 	// ID of the tiles which could be added to this group
 	boost::dynamic_bitset<> mCompatibleTiles;
-
-	private:
-	GroupType mType;
 	// ID of the tiles inside this group
 	boost::dynamic_bitset<> mTilesId;
 	std::vector<std::reference_wrapper<const Tile>> mTiles;
+
+	private:
+	GroupType mType;
 	uint16_t mScore;
-	boost::optional<boost::dynamic_bitset<>::size_type> mLastReturnedId;
 };
 
 #endif /* POTENTIAL_GROUP_H */

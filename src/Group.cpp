@@ -1,5 +1,6 @@
 #include "Group.h"
 #include "GameInfo.h"
+#include <sstream>
 
 Group::Group(const PotentialGroup& g)
 	: mType(g.mType),
@@ -57,4 +58,14 @@ uint16_t Group::score() const
 GroupType Group::type() const
 {
 	return mType;
+}
+
+std::string Group::toString() const
+{
+	std::ostringstream stream;
+	for (const auto& tile : mTilesInGroup)
+	{
+		stream << tile.get().toString() << " ";
+	}
+	return stream.str();
 }

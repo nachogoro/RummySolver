@@ -44,6 +44,11 @@ class DeckRegularTile : public Tile
 		 */
 		virtual bool isCompatibleForTrio(const Tile& o) const;
 
+		/**
+		 * Returns a string representation of the tile.
+		 */
+		virtual std::string toString() const;
+
 	private:
 		uint8_t mNumber;
 		TileColor::Color mColor;

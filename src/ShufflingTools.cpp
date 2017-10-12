@@ -3,6 +3,9 @@
 #include "PotentialTrio.h"
 #include "PotentialStair.h"
 
+// TODO remove
+#include <iostream>
+
 namespace
 {
 	/**
@@ -19,15 +22,19 @@ namespace
 		if (group.isValid())
 		{
 			allGroups.push_back(group);
+			std::cout << "Found group: " << Group(group).toString() << "\n";
 		}
 
-		boost::optional<uint16_t> nextId = group.nextCompatibleId();
+		const auto& compatibleTiles = group.compatibleTiles();
+		boost::dynamic_bitset<>::size_type nextTile
+			= compatibleTiles.find_first();
 
-		while (nextId)
+		while (nextTile != boost::dynamic_bitset<>::npos)
 		{
-			group.addTile(allTiles[*nextId]);
-			::generateAll(group, allGroups, allTiles);
-			nextId = group.nextCompatibleId();
+			GroupType copy(group);
+			copy.addTile(allTiles[nextTile]);
+			::generateAll(copy, allGroups, allTiles);
+			nextTile = compatibleTiles.find_next(nextTile);
 		}
 	}
 

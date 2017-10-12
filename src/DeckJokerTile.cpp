@@ -28,3 +28,8 @@ bool DeckJokerTile::isCompatibleForTrio(const Tile& o) const
 
 	return false;
 }
+
+std::string DeckJokerTile::toString() const
+{
+	return "J";
+}

@@ -25,6 +25,7 @@ class GameInfo
 	public:
 		static uint16_t numberOfTiles();
 		static const boost::dynamic_bitset<>& tableTilesMask();
+		static const std::vector<std::reference_wrapper<Tile>>& allTiles();
 		static const std::vector<std::reference_wrapper<const TableJokerTile>>& conditionallyLockedJokers();
 		static uint16_t numberOfGroups();
 		static const std::vector<std::reference_wrapper<const Group>>& allGroups();
@@ -32,6 +33,7 @@ class GameInfo
 		static void setTableTilesMask(uint16_t numberOfTableTiles);
 	private:
 		static uint16_t mNumberOfTiles;
+		static std::vector<std::reference_wrapper<Tile>> mAllTiles;
 		static boost::dynamic_bitset<> mTableTilesMask;
 		static std::vector<std::reference_wrapper<const TableJokerTile>> mConditionallyLockedJokers;
 		static std::vector<std::reference_wrapper<const Group>> mAllGroups;

@@ -7,10 +7,10 @@ namespace TileColor
 {
 enum Color
 {
-	BLACK  = 0x0001,
-	ORANGE = 0x0010,
-	BLUE   = 0x0100,
-	RED    = 0x1000
+	BLACK  = 1,
+	ORANGE = 1 << 1,
+	BLUE   = 1 << 2,
+	RED    = 1 << 3
 };
 
 extern const uint8_t colorMask;

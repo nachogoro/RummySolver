@@ -142,7 +142,7 @@ namespace
 						}
 						case TABLE_REGULAR:
 						{
-							const auto& tileRef = tile.get().asDeckRegularTile();
+							const auto& tileRef = tile.get().asTableRegularTile();
 							mask |= tileRef.color();
 							number = tileRef.number();
 							break;
@@ -381,4 +381,41 @@ void GroupConfiguration::addGroup(const Group& group)
 	mTiles |= group.mTileIdsInGroup;
 	mCompatibleGroups &= group.compatibleGroups();
 	mScore += group.score();
+}
+
+std::ostream& operator<<(std::ostream& stream, const GroupConfiguration& config)
+{
+	stream << "Tiles from player deck:\t\t";
+
+	{
+		boost::dynamic_bitset<>::size_type nextTile
+			= config.mTiles.find_first();
+
+		while (nextTile != boost::dynamic_bitset<>::npos)
+		{
+			const Tile& tile = GameInfo::allTiles()[nextTile];
+			if (tile.type() == DECK_JOKER || tile.type() == DECK_REGULAR)
+			{
+				stream << tile.toString() << " ";
+			}
+			nextTile = config.mTiles.find_next(nextTile);
+		}
+
+		stream << "\n\n";
+	}
+
+	{
+		boost::dynamic_bitset<>::size_type nextGroup
+			= config.mGroups.find_first();
+
+		while (nextGroup != boost::dynamic_bitset<>::npos)
+		{
+			const Group& group = GameInfo::allGroups()[nextGroup];
+			stream << group.toString() << "\n";
+			nextGroup = config.mGroups.find_next(nextGroup);
+		}
+		stream << "\n";
+	}
+
+	return stream;
 }

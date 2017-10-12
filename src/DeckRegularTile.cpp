@@ -1,6 +1,7 @@
 #include "DeckRegularTile.h"
 #include "TableRegularTile.h"
 #include "TableJokerTile.h"
+#include <sstream>
 
 DeckRegularTile::DeckRegularTile(
 		uint8_t number, TileColor::Color color, uint16_t id)
@@ -50,7 +51,7 @@ bool DeckRegularTile::canBeFollowedInStairBy(const Tile& other) const
 		case TABLE_JOKER:
 		{
 			const auto& o = other.asTableJokerTile();
-			if (!o.isLocked())
+			if (!o.isInconditionallyLocked())
 			{
 				return true;
 			}
@@ -60,7 +61,7 @@ bool DeckRegularTile::canBeFollowedInStairBy(const Tile& other) const
 				return false;
 			}
 
-			return (o.lockedColors() == color())
+			return (o.lockedColors() & color())
 				&& (o.lockedNumber() == number() + 1);
 		}
 	}
@@ -89,7 +90,7 @@ bool DeckRegularTile::isCompatibleForTrio(const Tile& other) const
 		case TABLE_JOKER:
 		{
 			const auto& o = other.asTableJokerTile();
-			if (!o.isLocked())
+			if (!o.isInconditionallyLocked())
 			{
 				return true;
 			}
@@ -105,4 +106,11 @@ bool DeckRegularTile::isCompatibleForTrio(const Tile& other) const
 	}
 
 	throw std::runtime_error("Tile is of no known type!");
+}
+
+std::string DeckRegularTile::toString() const
+{
+	std::ostringstream ss;
+	ss << TileColor::colorToLetter.at(mColor) << static_cast<int>(mNumber);
+	return ss.str();
 }

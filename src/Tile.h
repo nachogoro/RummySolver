@@ -3,6 +3,7 @@
 
 #include <cstdint>
 #include <boost/dynamic_bitset.hpp>
+#include <string>
 
 class DeckRegularTile;
 class DeckJokerTile;
@@ -11,7 +12,7 @@ class TableJokerTile;
 
 enum TileType
 {
-	DECK_REGULAR,
+	DECK_REGULAR = 0,
 	DECK_JOKER,
 	TABLE_REGULAR,
 	TABLE_JOKER
@@ -94,6 +95,11 @@ class Tile
 		 * the table.
 		 */
 		virtual const TableJokerTile& asTableJokerTile() const;
+
+		/**
+		 * Returns a string representation of the tile.
+		 */
+		virtual std::string toString() const = 0;
 
 	private:
 		// Unique identifier of the tile

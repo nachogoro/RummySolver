@@ -1,3 +1,4 @@
+#include "GameInfo.h"
 #include "Group.h"
 #include "Parser/GameParser.h"
 #include "ShufflingTools.h"
@@ -23,8 +24,16 @@ int main(int argc, char** argv)
 		 "Time limit (in seconds) to find a solution");
 
 	po::variables_map opts;
-	po::store(po::parse_command_line(argc, argv, desc), opts);
-	po::notify(opts);
+	try
+	{
+		po::store(po::parse_command_line(argc, argv, desc), opts);
+		po::notify(opts);
+	}
+	catch (const po::error& e)
+	{
+		std::cout << desc << "\n";
+		return 1;
+	}
 
 	if (opts.count("help"))
 	{
@@ -49,9 +58,10 @@ int main(int argc, char** argv)
 	const std::vector<Group> allGroups
 		= ShufflingTools::getAllPossibleGroups(parsingResult->allTiles());
 
-	for (const auto& g : allGroups)
+	for (const auto& group : allGroups)
 	{
-		std::cout << g.tileIdsInGroup() << "\n";
+		std::cout << group.toString() << "\n";
+		std::cout << group.tileIdsInGroup() << "\n";
 	}
 
 	const boost::optional<GroupConfiguration> bestConfig
@@ -63,6 +73,7 @@ int main(int argc, char** argv)
 	{
 		std::cout << "Found configuration with score: "
 			<< bestConfig->score() << "\n";
+		std::cout << *bestConfig;
 	}
 	else
 	{

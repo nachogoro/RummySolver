@@ -191,7 +191,8 @@ namespace
 						result.push_back(
 								TableJokerTile::lockedInTrio(
 									number,
-									(~mask) & TileColor::colorMask,
+									static_cast<uint8_t>(
+										(~mask) & TileColor::colorMask),
 									id++));
 					}
 				}
