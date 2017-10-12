@@ -106,7 +106,8 @@ bool TableJokerTile::canBeFollowedInStairBy(const Tile& other) const
 		{
 			const auto& o = other.asDeckRegularTile();
 			return (o.color() & lockedColors())
-				&& (o.number() == lockedNumber() + 1);
+				&& ((o.number() == lockedNumber() + 1)
+						|| (lockedNumber() == 13 && o.number() == 1));
 		}
 		case DECK_JOKER:
 		{
@@ -116,7 +117,8 @@ bool TableJokerTile::canBeFollowedInStairBy(const Tile& other) const
 		{
 			const auto& o = other.asTableRegularTile();
 			return (o.color() & lockedColors())
-				&& (o.number() == lockedNumber() + 1);
+				&& ((o.number() == lockedNumber() + 1)
+						|| (lockedNumber() == 13 && o.number() == 1));
 		}
 		case TABLE_JOKER:
 		{
@@ -132,7 +134,8 @@ bool TableJokerTile::canBeFollowedInStairBy(const Tile& other) const
 			}
 
 			return (o.lockedColors() & lockedColors())
-				&& (o.lockedNumber() == lockedNumber() + 1);
+				&& ((o.lockedNumber() == lockedNumber() + 1)
+						|| (lockedNumber() == 13 && o.lockedNumber() == 1));
 		}
 	}
 
