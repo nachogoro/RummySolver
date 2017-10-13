@@ -6,6 +6,19 @@
 namespace ProgressBar
 {
 	/**
+	 * Must be invoked when we want to start using the progress bar, with the
+	 * initial message (which will get updated if any call to printMessage() is
+	 * ever done).
+	 */
+	void startProgressBar(const std::string& msg);
+
+	/**
+	 * Must be invoked when the progress bar is no longer needed to restore the
+	 * position of the cursor to the end of the output.
+	 */
+	void endProgressBar();
+
+	/**
 	 * Prints the progress bar and leaves the cursor right at the beginning of
 	 * it, ready for a new call to the method.
 	 */

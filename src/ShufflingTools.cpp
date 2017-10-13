@@ -72,7 +72,6 @@ namespace
 					&& newCandidate->isValid())
 			{
 				result = newCandidate;
-				//std::cout << "Found temporary candidate with score: " << newCandidate->score() << std::endl;
 			}
 
 			nextGroup = compatibleGroups.find_next(nextGroup);
@@ -173,11 +172,12 @@ boost::optional<GroupConfiguration> ShufflingTools::getBestConfiguration(
 				allGroups.end(),
 				[](const Group& g) { return g.score() == 0; }));
 
-	std::cout << "Looking for a valid configuration...\n";
-	ProgressBar::printBar(0);
+	ProgressBar::startProgressBar("Looking for a valid configuration...");
 
 	for (size_t i = 0; i < lastIndex; ++i)
 	{
+		const unsigned int progressPercentage
+			= static_cast<unsigned int>(i*100.0/(lastIndex-1));
 		GroupConfiguration candidate(allGroups[i]);
 
 		auto updatedBestConfig = ::findBestConfigurationRecursively(
@@ -187,17 +187,16 @@ boost::optional<GroupConfiguration> ShufflingTools::getBestConfiguration(
 				|| (updatedBestConfig && bestConfig
 					&& updatedBestConfig->score() > bestConfig->score()))
 		{
-			ProgressBar::printMessage("Found new configuration with score: " + std::to_string(updatedBestConfig->score()));
+			ProgressBar::printMessage("Found new configuration with score: "
+					+ std::to_string(updatedBestConfig->score()));
 		}
 
 		bestConfig = updatedBestConfig;
 
-		ProgressBar::printBar((static_cast<unsigned int>(static_cast<double>(i)/lastIndex*100)));
-
-		//++show_progress;
+		ProgressBar::printBar(progressPercentage);
 	}
-	ProgressBar::printBar(100);
-	std::cout << std::string(4, '\n');
+
+	ProgressBar::endProgressBar();
 	return bestConfig;
 }
 

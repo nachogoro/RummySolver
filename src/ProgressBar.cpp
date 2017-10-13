@@ -6,27 +6,24 @@
 
 namespace
 {
-
 	std::string generateProgressBar(unsigned int percentage)
 	{
 		const int progress = static_cast<int>(percentage/PERCENTAGE_BIN_SIZE);
-		std::cout <<      "0%    10    20    30    50    60    70    80    90    100%\n";
-		std::string bar = "[-----|-----|-----|-----|-----|-----|-----|-----|-----]";
+		std::cout << "0%    10    20    30    50    60    70    80    90    100%\n";
+		std::string bar("[" + std::string(LENGTH_OF_PROGRESS_BAR-2, ' ') + "]");
 
 		unsigned int numberOfSymbols = std::min(
 				std::max(0, progress - 1),
 				LENGTH_OF_PROGRESS_BAR - 2);
 
-		for (size_t i = 1; i <= numberOfSymbols; ++i)
-		{
-			if (bar[i] != '|')
-			{
-				bar[i] = '*';
-			}
-		}
-
-		return bar;
+		return bar.replace(1, numberOfSymbols, std::string(numberOfSymbols, '|'));
 	}
+}
+
+void ProgressBar::startProgressBar(const std::string& msg)
+{
+	std::cout << msg << "\n";
+	printBar(0);
 }
 
 void ProgressBar::printBar(unsigned int percentage)
@@ -37,4 +34,9 @@ void ProgressBar::printBar(unsigned int percentage)
 void ProgressBar::printMessage(const std::string& message)
 {
 	std::cout << "\r\033[F" << message << "\n";
+}
+
+void ProgressBar::endProgressBar()
+{
+	std::cout << std::string(2, '\n');
 }
