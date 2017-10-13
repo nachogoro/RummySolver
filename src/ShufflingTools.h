@@ -29,11 +29,11 @@ namespace ShufflingTools
 	 * should be played so that all the tiles in the table are used and the
 	 * score of the tiles played from the deck is maximized).
 	 * Since this is a very time consuming operation, an optional time limit
-	 * can be set, which turns this method in a best-effort method.
+	 * can be set, which turns this method into a best-effort method.
 	 */
 	boost::optional<GroupConfiguration> getBestConfiguration(
 			const std::vector<Group>& allGroups,
-			boost::optional<std::chrono::duration<int>> limitInSeconds);
+			boost::optional<std::chrono::duration<int>> duration);
 }
 
 #endif /* SHUFFLING_TOOLS_H */

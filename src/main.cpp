@@ -43,7 +43,10 @@ int main(int argc, char** argv)
 
 	const std::string& deckFile = opts["deck"].as<std::string>();
 	const std::string& tableFile = opts["table"].as<std::string>();
-	const int timeLimit = opts["time_limit"].as<int>();
+	const boost::optional<std::chrono::duration<int>> duration
+		= opts.count("time_limit")
+			? boost::optional<std::chrono::duration<int>>(opts["time_limit"].as<int>())
+			: boost::none;
 
 	boost::optional<GameParser::Result> parsingResult
 		= GameParser::parseGame(deckFile, tableFile);
@@ -63,11 +66,10 @@ int main(int argc, char** argv)
 	// Record start time
 	const auto start = std::chrono::high_resolution_clock::now();
 
-	// TODO deal with SIGINT so that the program can be stopped at any point
 	const boost::optional<GroupConfiguration> bestConfig
 		= ShufflingTools::getBestConfiguration(
 				allGroups,
-				std::chrono::duration<int>(timeLimit));
+				duration);
 
 	const auto finish = std::chrono::high_resolution_clock::now();
 	std::cout << "Elapsed time: "

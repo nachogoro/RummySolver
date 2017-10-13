@@ -162,8 +162,15 @@ std::vector<Group> ShufflingTools::getAllPossibleGroups(
 
 boost::optional<GroupConfiguration> ShufflingTools::getBestConfiguration(
 		const std::vector<Group>& allGroups,
-		boost::optional<std::chrono::duration<int>> /*limitInSecond*/)
+		boost::optional<std::chrono::duration<int>> duration)
 {
+	const auto now = std::chrono::steady_clock::now();
+	const boost::optional<std::chrono::steady_clock::time_point> limitPoint
+		= duration
+			? boost::optional<std::chrono::steady_clock::time_point>(
+					now + *duration)
+			: boost::none;
+
 	boost::optional<GroupConfiguration> bestConfig;
 
 	// Groups are sorted by score. If the first group has a score of
@@ -177,7 +184,10 @@ boost::optional<GroupConfiguration> ShufflingTools::getBestConfiguration(
 
 	ProgressBar::startProgressBar("Looking for a valid configuration...");
 
-	for (size_t i = 0; i < lastIndex; ++i)
+	for (size_t i = 0;
+			i < lastIndex
+			&& (!limitPoint || std::chrono::steady_clock::now() < *limitPoint);
+			++i)
 	{
 		const unsigned int progressPercentage
 			= static_cast<unsigned int>(i*100.0/(lastIndex-1));
