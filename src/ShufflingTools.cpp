@@ -9,12 +9,10 @@ namespace
 {
 	/**
 	 * Recursively generate all potential groups of a certain type.
-	 * The parameter group must be pass by value so that nextCompatibleId()
-	 * works correctly.
 	 */
 	template<typename GroupType>
 	void generateAll(
-			GroupType group,
+			const GroupType& group,
 			std::vector<Group>& allGroups,
 			const std::vector<std::reference_wrapper<Tile>>& allTiles)
 	{
@@ -36,6 +34,10 @@ namespace
 		}
 	}
 
+	/**
+	 * Recursively find the best configuration of groups (maximizing the
+	 * score).
+	 */
 	boost::optional<GroupConfiguration> findBestConfigurationRecursively(
 			const GroupConfiguration& candidate,
 			const boost::optional<GroupConfiguration>& currentBest,
@@ -57,7 +59,8 @@ namespace
 			// If the current configuration is now only checking against groups
 			// of score zero and its score is already below the current best
 			// one, no need to keep checking
-			if (allGroups[nextGroup].score() == 0 && result && candidate.score() <= result->score())
+			if (allGroups[nextGroup].score() == 0
+					&& result && candidate.score() <= result->score())
 			{
 				break;
 			}
