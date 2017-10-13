@@ -50,7 +50,8 @@ void PotentialStair::addTile(const Tile& tile)
 				}
 				else if (number > 14)
 				{
-					continue;
+					compatibleTiles.reset();
+					break;
 				}
 
 				params = std::make_pair(
@@ -68,7 +69,8 @@ void PotentialStair::addTile(const Tile& tile)
 				}
 				else if (number > 14)
 				{
-					continue;
+					compatibleTiles.reset();
+					break;
 				}
 
 				params = std::make_pair(
