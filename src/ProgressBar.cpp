@@ -59,6 +59,12 @@ void ProgressBar::operator++()
 
 void ProgressBar::printNewMessage(const std::string& message)
 {
+	if (mEnded)
+	{
+		throw std::runtime_error(
+				"Attempted to use progress bar after having terminated it");
+	}
+
 	std::cout << "\r"
 		<< std::left
 		<< std::setw(LENGTH_OF_PROGRESS_BAR + 6)
@@ -73,6 +79,12 @@ void ProgressBar::printNewMessage(const std::string& message)
 
 void ProgressBar::updateLastPrintedMessage(const std::string& message)
 {
+	if (mEnded)
+	{
+		throw std::runtime_error(
+				"Attempted to use progress bar after having terminated it");
+	}
+
 	std::cout << "\r\033[F"
 		<< std::left
 		<< std::setw(mLengthOfLastPrintedMessage)
