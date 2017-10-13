@@ -44,7 +44,7 @@ int main(int argc, char** argv)
 	const std::string& deckFile = opts["deck"].as<std::string>();
 	const std::string& tableFile = opts["table"].as<std::string>();
 	const boost::optional<std::chrono::duration<int>> duration
-		= opts.count("time_limit")
+		= opts["time_limit"].as<int>() > 0
 			? boost::optional<std::chrono::duration<int>>(opts["time_limit"].as<int>())
 			: boost::none;
 
