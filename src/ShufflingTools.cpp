@@ -182,15 +182,14 @@ boost::optional<GroupConfiguration> ShufflingTools::getBestConfiguration(
 				allGroups.end(),
 				[](const Group& g) { return g.score() == 0; }));
 
-	ProgressBar::startProgressBar("Looking for a valid configuration...");
+	ProgressBar progressDisplay(
+			lastIndex, "Looking for a valid configuration...");
 
 	for (size_t i = 0;
 			i < lastIndex
 			&& (!limitPoint || std::chrono::steady_clock::now() < *limitPoint);
 			++i)
 	{
-		const unsigned int progressPercentage
-			= static_cast<unsigned int>(i*100.0/(lastIndex-1));
 		GroupConfiguration candidate(allGroups[i]);
 
 		auto updatedBestConfig = ::findBestConfigurationRecursively(
@@ -200,16 +199,16 @@ boost::optional<GroupConfiguration> ShufflingTools::getBestConfiguration(
 				|| (updatedBestConfig && bestConfig
 					&& updatedBestConfig->score() > bestConfig->score()))
 		{
-			ProgressBar::printMessage("Found new configuration with score: "
+			progressDisplay.updateLastPrintedMessage(
+					"Found new configuration with score: "
 					+ std::to_string(updatedBestConfig->score()));
 		}
 
 		bestConfig = updatedBestConfig;
 
-		ProgressBar::printBar(progressPercentage);
+		++progressDisplay;
 	}
 
-	ProgressBar::endProgressBar();
 	return bestConfig;
 }
 

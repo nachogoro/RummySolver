@@ -26,23 +26,65 @@ namespace
 	}
 }
 
-void ProgressBar::startProgressBar(const std::string& msg)
+ProgressBar::ProgressBar(
+			uint32_t expectedIterations, const std::string& initialMessage)
+	: mTotalIterations(expectedIterations),
+	  mNumberOfTicks(0),
+	  mEnded(false)
 {
-	std::cout << msg << "\n";
-	printBar(0);
+	std::cout << initialMessage << "\n";
+	mLengthOfLastPrintedMessage = initialMessage.size();
+	std::cout << generateProgressBar(0) << "\r" << std::flush;
 }
 
-void ProgressBar::printBar(unsigned int percentage)
+ProgressBar::~ProgressBar()
 {
+	endProgressBar();
+}
+
+void ProgressBar::operator++()
+{
+	if (mEnded)
+	{
+		throw std::runtime_error(
+				"Attempted to use progress bar after having terminated it");
+	}
+
+	++mNumberOfTicks;
+	const unsigned int percentage = static_cast<unsigned int>(
+			mNumberOfTicks*100.0/(mTotalIterations-1));
+
 	std::cout << generateProgressBar(percentage) << "\r" << std::flush;
 }
 
-void ProgressBar::printMessage(const std::string& message)
+void ProgressBar::printNewMessage(const std::string& message)
 {
-	std::cout << "\r\033[F" << message << "\n";
+	std::cout << "\r"
+		<< std::left
+		<< std::setw(LENGTH_OF_PROGRESS_BAR + 6)
+		<< message << "\n";
+	mLengthOfLastPrintedMessage = message.size();
+	const unsigned int percentage = static_cast<unsigned int>(
+			mNumberOfTicks*100.0/(mTotalIterations-1));
+
+	std::cout << generateProgressBar(percentage) << "\r" << std::flush;
+
+}
+
+void ProgressBar::updateLastPrintedMessage(const std::string& message)
+{
+	std::cout << "\r\033[F"
+		<< std::left
+		<< std::setw(mLengthOfLastPrintedMessage)
+		<< message << "\n";
+	mLengthOfLastPrintedMessage = message.size();
 }
 
 void ProgressBar::endProgressBar()
 {
-	std::cout << std::string(2, '\n');
+	if (!mEnded)
+	{
+		std::cout << std::string(2, '\n');
+	}
+	mEnded = true;
 }
