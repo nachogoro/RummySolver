@@ -1,9 +1,8 @@
 #include "ShufflingTools.h"
 #include "GameInfo.h"
-#include "PotentialTrio.h"
 #include "PotentialStair.h"
-#include <boost/progress.hpp>
-
+#include "PotentialTrio.h"
+#include "ProgressBar.h"
 #include <iostream>
 
 namespace
@@ -174,7 +173,9 @@ boost::optional<GroupConfiguration> ShufflingTools::getBestConfiguration(
 				allGroups.end(),
 				[](const Group& g) { return g.score() == 0; }));
 
-	boost::progress_display show_progress(lastIndex);
+	std::cout << "Looking for a valid configuration...\n";
+	ProgressBar::printBar(0);
+
 	for (size_t i = 0; i < lastIndex; ++i)
 	{
 		GroupConfiguration candidate(allGroups[i]);
@@ -182,21 +183,21 @@ boost::optional<GroupConfiguration> ShufflingTools::getBestConfiguration(
 		auto updatedBestConfig = ::findBestConfigurationRecursively(
 				candidate, bestConfig, allGroups);
 
-		// TODO make this work with boost::progress_display
-#if 0
 		if ((!bestConfig && updatedBestConfig)
 				|| (updatedBestConfig && bestConfig
 					&& updatedBestConfig->score() > bestConfig->score()))
 		{
-			std::cout << "Found new configuration with score: "
-				<< updatedBestConfig->score() << "\n";
+			ProgressBar::printMessage("Found new configuration with score: " + std::to_string(updatedBestConfig->score()));
 		}
-#endif
 
 		bestConfig = updatedBestConfig;
 
-		++show_progress;
+		ProgressBar::printBar((static_cast<unsigned int>(static_cast<double>(i)/lastIndex*100)));
+
+		//++show_progress;
 	}
+	ProgressBar::printBar(100);
+	std::cout << std::string(4, '\n');
 	return bestConfig;
 }
 
