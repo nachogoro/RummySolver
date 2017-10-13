@@ -50,7 +50,7 @@ void ProgressBar::operator++()
 				"Attempted to use progress bar after having terminated it");
 	}
 
-	++mNumberOfTicks;
+	mNumberOfTicks = std::min(mTotalIterations, mNumberOfTicks+1);
 	const unsigned int percentage = static_cast<unsigned int>(
 			mNumberOfTicks*100.0/(mTotalIterations-1));
 

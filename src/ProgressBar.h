@@ -35,12 +35,6 @@ public:
 	void endProgressBar();
 
 	/**
-	 * Prints the progress bar and leaves the cursor right at the beginning of
-	 * it, ready for a new call to the method.
-	 */
-	void printBar(unsigned int percentage);
-
-	/**
 	 * Prints a new message under the last printed message, without overwriting
 	 * it. This moves the progress bar down to be placed under the newly
 	 * written message.
