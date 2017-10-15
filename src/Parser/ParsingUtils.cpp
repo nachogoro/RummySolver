@@ -219,12 +219,22 @@ namespace
 						result.push_back(std::unique_ptr<Tile>(
 									new TableRegularTile(
 										number++, tile.color(), id++)));
+
+						if (number == 14)
+						{
+							number = 1;
+						}
 					}
 					else
 					{
 						result.push_back(
 								TableJokerTile::lockedInStair(
 									number++, color, id++));
+
+						if (number == 14)
+						{
+							number = 1;
+						}
 					}
 				}
 
