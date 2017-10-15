@@ -52,7 +52,7 @@ void ProgressBar::operator++()
 
 	mNumberOfTicks = std::min(mTotalIterations, mNumberOfTicks+1);
 	const unsigned int percentage = static_cast<unsigned int>(
-			mNumberOfTicks*100.0/(mTotalIterations-1));
+			mNumberOfTicks*100.0/mTotalIterations);
 
 	std::cout << generateProgressBar(percentage) << "\r" << std::flush;
 }
@@ -71,7 +71,7 @@ void ProgressBar::printNewMessage(const std::string& message)
 		<< message << "\n";
 	mLengthOfLastPrintedMessage = message.size();
 	const unsigned int percentage = static_cast<unsigned int>(
-			mNumberOfTicks*100.0/(mTotalIterations-1));
+			mNumberOfTicks*100.0/mTotalIterations);
 
 	std::cout << generateProgressBar(percentage) << "\r" << std::flush;
 
