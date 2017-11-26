@@ -64,8 +64,8 @@ Tiles in each of the two files are described by a letter indicating the color
 of the tile followed by its number (in case of a regular tile) or a letter `J`
 in case of a joker.
 
-The color codes are `O` for orange; `B` for blue; `K` for black; and `R` for
-red.
+The color codes are `O` for orange; `B` for blue; `K` for black; and `P` for
+pink.
 
 In the case of the player's deck file, there must be one tile per line.
 

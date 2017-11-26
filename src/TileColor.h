@@ -10,7 +10,7 @@ enum Color
 	BLACK  = 1,
 	ORANGE = 1 << 1,
 	BLUE   = 1 << 2,
-	RED    = 1 << 3
+	PINK    = 1 << 3
 };
 
 extern const uint8_t colorMask;

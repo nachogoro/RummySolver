@@ -6,12 +6,12 @@ const std::map<char, TileColor::Color> TileColor::letterToColor = {
 	{'K', TileColor::BLACK},
 	{'O', TileColor::ORANGE},
 	{'B', TileColor::BLUE},
-	{'R', TileColor::RED}
+	{'P', TileColor::PINK}
 };
 
 const std::map<TileColor::Color, char> TileColor::colorToLetter = {
 	{TileColor::BLACK, 'K'},
 	{TileColor::ORANGE, 'O'},
 	{TileColor::BLUE, 'B'},
-	{TileColor::RED, 'R'}
+	{TileColor::PINK, 'P'}
 };
